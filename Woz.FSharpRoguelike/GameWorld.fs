@@ -15,7 +15,7 @@ module GameWorld =
 
     type ItemId = int
 
-    type Item = {id: ItemId; name: string; }
+    type Item = {id: ItemId; name: string }
 
     type Stats = 
       | Health 
