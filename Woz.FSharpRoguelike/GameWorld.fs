@@ -125,7 +125,7 @@ module GameWorld =
     let checkLocationFor predicates level location =
         if hasCoordinate level location then 
             let testPredicate = (fun predicate -> predicate level location)
-            predicates |> Seq.forall testPredicate
+            predicates |> Seq.exists testPredicate
         else true
 
     let getItems level location =
