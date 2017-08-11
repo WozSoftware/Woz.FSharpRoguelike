@@ -132,3 +132,37 @@ module GameWorld =
         match level.mapItems.TryFind location with
         | Some items -> items
         | None -> []
+
+    let addActor level actor =
+        {
+            level with 
+                actors = level.actors.Add(actor.id, actor)
+                mapActors = level.mapActors.Add(actor.location, actor.id)
+        }
+    
+    let removeActor level actor =
+        {
+            level with 
+                actors = level.actors.Remove(actor.id)
+                mapActors = level.mapActors.Remove(actor.location)
+        }
+
+    let moveActor level actor newLocation =
+        let oldLocation = actor.location
+        let newActor = {actor with location = newLocation}
+        let mapActors = level.mapActors.Remove(actor.location).Add(newLocation, actor.id)
+        {
+            level with 
+                actors = level.actors.Add(actor.id, newActor)
+                mapActors = level.mapActors
+                    .Remove(actor.location)
+                    .Add(newLocation, actor.id)
+        }
+
+    //// Easier but slower
+    //let moveActorSimple level actor newLocation =
+    //    let newActor = {actor with location = newLocation}
+    //    addActor (removeActor level actor) newActor
+    
+
+    
