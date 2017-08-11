@@ -59,7 +59,18 @@ type Stats =
     | Dexterity
   
 type Stat = {current: int; max: int}
+
+module Stat =
+    let increaseCurrent amount stat =
+        {stat with current = min (stat.current + amount) stat.max}
+    
+    let decreaseCurrent amount stat =
+        {stat with current = max (stat.current - amount) 0}
   
+    let increaseMax amount stat =
+        let newValue = stat.max + amount
+        {stat with current = newValue; max = newValue}
+
 type ActorId = int
   
 type Actor = 
@@ -71,7 +82,12 @@ type Actor =
         location: Vector
         backpack: List<ItemId>
     }
-  
+ 
+module Actor =
+    let updateStat editor stat actor =
+        let current = editor (actor.stats.TryFind stat).Value
+        {actor with stats = actor.stats.Add(stat, editor current)}
+
 type Level = 
     {
         playerId: ActorId
@@ -85,84 +101,76 @@ type Level =
         mapItems: Map<Vector, List<ItemId>>
     }
 
-module GameWorld =
+module Level =
+    open Actor
 
-    let hasCoordinate level location = 
+    let hasCoordinate location level = 
         location >= Map.bottomLeft && 
         location <= level.map.topRight
 
-    let getTile level location = 
+    let getTile location level = 
         level.map.tiles.[location.y].[location.y]
 
-    let isBlockingTile level location =
-        match getTile level location with
+    let isBlockingTile location level =
+        match getTile location level with
         | Void | Wall -> true
         | Floor | Water -> false
 
-    let getDoor level location = 
+    let getDoor location level = 
         level.doors.TryFind location
 
-    let isBlockingDoor level location = 
-        match getDoor level location with
+    let isBlockingDoor location level = 
+        match getDoor location level with
         | Some door -> 
             match door with 
             | Closed | Locked _ -> true
             | Open -> false
         | None -> false
 
-    let getActorById level actorId =
+    let getActorById actorId level =
         level.actors.TryFind actorId
 
-    let getActorByLocation level location =
+    let getActorByLocation location level =
         level.mapActors.TryFind location
 
-    let hasActor level location =
-        (getActorByLocation level location).IsSome
+    let hasActor location level =
+        (getActorByLocation location level).IsSome
 
     let blockView = [isBlockingTile; isBlockingDoor]
     let blockMove = [isBlockingTile; isBlockingDoor; hasActor]
     
-    let checkLocationFor predicates level location =
-        if hasCoordinate level location then 
-            let testPredicate = (fun predicate -> predicate level location)
+    let checkLocationFor predicates location level =
+        if hasCoordinate location level then 
+            let testPredicate = (fun predicate -> predicate location level)
             predicates |> Seq.exists testPredicate
         else true
 
-    let getItems level location =
+    let getItems location level =
         match level.mapItems.TryFind location with
         | Some items -> items
         | None -> []
 
-    let addActor level actor =
+    let addActor actor level =
         {
             level with 
                 actors = level.actors.Add(actor.id, actor)
                 mapActors = level.mapActors.Add(actor.location, actor.id)
         }
     
-    let removeActor level actor =
+    let removeActor actor level =
         {
             level with 
                 actors = level.actors.Remove(actor.id)
                 mapActors = level.mapActors.Remove(actor.location)
         }
 
-    let moveActor level actor newLocation =
-        let oldLocation = actor.location
-        let newActor = {actor with location = newLocation}
-        let mapActors = level.mapActors.Remove(actor.location).Add(newLocation, actor.id)
-        {
-            level with 
-                actors = level.actors.Add(actor.id, newActor)
-                mapActors = level.mapActors
-                    .Remove(actor.location)
-                    .Add(newLocation, actor.id)
-        }
-
-    //// Easier but slower
-    //let moveActorSimple level actor newLocation =
-    //    let newActor = {actor with location = newLocation}
-    //    addActor (removeActor level actor) newActor
+    let updateActor editor actor level =
+        level |> removeActor actor |> addActor (editor actor)
     
+    let updateActorStat editor stat actor level =
+        level |> updateActor (updateStat editor stat) actor
+
+//    let lowerActorStat amount stat actor level =
+//        level |> updateActorStat (decreaseCurrent amount) stat actor 
 
     
