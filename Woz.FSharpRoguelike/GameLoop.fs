@@ -1,4 +1,6 @@
-﻿//namespace Woz.FSharpRoguelike
+﻿module GameLoop
+
+//module FSharpRoguelike
 //
 //[<AutoOpenAttribute>]
 //

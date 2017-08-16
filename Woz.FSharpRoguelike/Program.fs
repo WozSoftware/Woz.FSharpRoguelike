@@ -1,4 +1,4 @@
-﻿module FSharpRoguelike
+﻿module Program
 
 [<EntryPoint>]
 let main argv = 
