@@ -26,6 +26,9 @@ module Level =
             | Open -> false
         | None -> false
 
+    let getActor actorId level =
+        level |> Optic.get (expectActorWithId_ actorId)
+
     let hasActor location level =
         level |> Optic.get (mapActorAt_ location) |> isSome
 
@@ -39,6 +42,7 @@ module Level =
         else true
 
     let getItems location level =
+        // Build a lens
         match level.mapItems.TryFind location with
         | Some items -> items
         | None -> []

@@ -19,9 +19,7 @@ module Stat =
 
 module Level =
     open Stat
-
-    let getActor actorId level =
-        level ^. (expectActorWithId_ actorId)
+    open Queries.Level
 
     let spawnActor actor level =
         level
@@ -44,7 +42,7 @@ module Level =
     
     let hurtActor damage actorId level =
         let actorHealth_ = expectActorWithId_ actorId >-> expectStatFor_ Health
-        let updatedHealth = decreaseCurrent damage (level ^. actorHealth_)
+        let updatedHealth = decreaseCurrent damage (level |> Optic.get actorHealth_)
         level |> Optic.set actorHealth_ updatedHealth
 
 
