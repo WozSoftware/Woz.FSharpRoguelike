@@ -27,13 +27,13 @@ module Level =
             |> Optic.set (expectMapActorAt_ actor.location) actor.id
     
     let removeActor actorId level =
-        let actor = level |> getActor actorId
+        let actor = level |> expectActor actorId
         level 
             |> Optic.set (actorWithId_ actorId) None
             |> Optic.set (mapActorAt_ actor.location) None
 
     let moveActor location actorId level =
-        let actor = level |> getActor actorId
+        let actor = level |> expectActor actorId
         let movedActor = actor |> Optic.set location_ location 
         level 
             |> Optic.set (expectActorWithId_ actorId) movedActor

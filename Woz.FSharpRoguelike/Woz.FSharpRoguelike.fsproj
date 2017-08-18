@@ -59,8 +59,11 @@
     <None Include="App.config" />
     <Content Include="packages.config" />
     <Compile Include="AetherExtensions.fs" />
+    <Compile Include="Monads.fs" />
+    <Compile Include="Vector.fs" />
     <Compile Include="GameTypes.fs" />
     <Compile Include="Queries.fs" />
+    <Compile Include="Validation.fs" />
     <Compile Include="Operations.fs" />
     <Compile Include="GameLoop.fs" />
     <Compile Include="Program.fs" />

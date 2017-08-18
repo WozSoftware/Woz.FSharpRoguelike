@@ -4,9 +4,10 @@ open Microsoft.FSharp.Core.Option
 open Aether
 open GameTypes
 open GameTypes.Level
+open Vector
 
 module Level =
-    let private hasCoordinate location level = 
+    let hasCoordinate location level = 
         location >= Map.bottomLeft && 
         location <= level.map.topRight
 
@@ -14,7 +15,7 @@ module Level =
         level.map.tiles.[location.y].[location.y]
 
     let private isBlockingTile location level =
-        match getTile location level with
+        match level |> getTile location with
         | Void | Wall -> true
         | Floor | Water -> false
 
@@ -27,6 +28,9 @@ module Level =
         | None -> false
 
     let getActor actorId level =
+        level |> Optic.get (actorWithId_ actorId)
+
+    let expectActor actorId level =
         level |> Optic.get (expectActorWithId_ actorId)
 
     let hasActor location level =
@@ -37,7 +41,7 @@ module Level =
 
     let checkLocationFor predicates location level =
         if hasCoordinate location level then 
-            let testPredicate = (fun predicate -> predicate location level)
+            let testPredicate = (fun predicate -> level |> predicate location)
             predicates |> Seq.exists testPredicate
         else true
 

@@ -5,38 +5,7 @@ open Aether.Operators
 open Aether.Optics
 open AetherExtensions.Optics
 open AetherExtensions.Optics.Map
-
-// -----------------------------------------
-
-type public vector = 
-    {
-        x: int
-        y: int
-    } 
-with
-    static member op_Addition (lhs, rhs) = 
-        {x = lhs.x + rhs.x; y = lhs.y + rhs.y}
-
-    static member op_Subtraction (lhs, rhs) = 
-        {x = lhs.x - rhs.x; y = lhs.y - rhs.y}
-
-    static member op_Multiply (vector: vector, scale: int) = 
-        {x = vector.x * scale; y = vector.y * scale}
-
-    static member op_LessThanOrEqual (lhs, rhs) = 
-        lhs.x <= rhs.x && lhs.y <= rhs.y
-
-    static member op_Equals (lhs, rhs) = 
-        lhs.x = rhs.x && lhs.y = rhs.y
-
-    static member op_LessThan (lhs, rhs) = 
-        lhs.x < rhs.x && lhs.y < rhs.y
-
-    static member op_GreaterThanOrEqual (lhs, rhs) = 
-        lhs.x >= rhs.x && lhs.y >= rhs.y
-
-    static member op_GreaterThan (lhs, rhs) = 
-        lhs.x > rhs.x && lhs.y > rhs.y
+open Vector
 
 // -----------------------------------------
 
@@ -48,8 +17,8 @@ type map =
         topRight: vector
     } 
 
-    module Map =
-        let bottomLeft = {x = 0; y = 0}
+module Map = 
+    let bottomLeft = {x = 0; y = 0}
 
 // -----------------------------------------
 
@@ -115,7 +84,7 @@ module Actor =
 
 // -----------------------------------------
 
-type Level = 
+type level = 
     {
         playerId: actorId
 
