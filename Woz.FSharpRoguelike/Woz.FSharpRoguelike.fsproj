@@ -65,6 +65,9 @@
     <Compile Include="Queries.fs" />
     <Compile Include="Validation.fs" />
     <Compile Include="Operations.fs" />
+    <Compile Include="Commands.fs" />
+    <Compile Include="PlayerInput.fs" />
+    <Compile Include="RenderEngine.fs" />
     <Compile Include="GameLoop.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

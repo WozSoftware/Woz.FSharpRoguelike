@@ -16,3 +16,11 @@ module Result =
         member this.Return(value) = Valid value
 
     let result = new resultFactory()
+
+module Maybe =
+    type maybeFactory() =
+        member this.Bind(monad, func) = Option.bind func monad
+
+        member this.Return(value) = Some value
+
+    let maybe = new maybeFactory()

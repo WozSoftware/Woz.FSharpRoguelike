@@ -5,6 +5,7 @@ open Aether.Operators
 open GameTypes
 open GameTypes.Actor
 open GameTypes.Level
+open Queries.Level
 
 module Stat =
     let increaseCurrent amount stat =
@@ -19,7 +20,6 @@ module Stat =
 
 module Level =
     open Stat
-    open Queries.Level
 
     let spawnActor actor level =
         level
@@ -32,13 +32,14 @@ module Level =
             |> Optic.set (actorWithId_ actorId) None
             |> Optic.set (mapActorAt_ actor.location) None
 
-    let moveActor location actorId level =
+    let moveActor direction actorId level =
         let actor = level |> expectActor actorId
-        let movedActor = actor |> Optic.set location_ location 
+        let targetLocation = actor.location + direction
+        let movedActor = actor |> Optic.set location_ targetLocation
         level 
             |> Optic.set (expectActorWithId_ actorId) movedActor
             |> Optic.set (mapActorAt_ actor.location) None
-            |> Optic.set (expectMapActorAt_ location) actorId
+            |> Optic.set (expectMapActorAt_ targetLocation) actorId
     
     let hurtActor damage actorId level =
         let actorHealth_ = expectActorWithId_ actorId >-> expectStatFor_ Health

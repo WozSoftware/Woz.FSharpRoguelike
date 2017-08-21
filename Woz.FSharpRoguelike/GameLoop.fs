@@ -1,27 +1,36 @@
 ﻿module GameLoop
 
-//module FSharpRoguelike
+//open GameTypes
+//open PlayerInput
+//open Commands
+//open Queries.Level
+//open Monads
+//open Monads.Result
 //
-//[<AutoOpenAttribute>]
+//// Stub
+//let private getAiCommand = buildIdleCommand
 //
-//type Command = int
+//let runAiCommand level command  =
+//    match level |> command with
+//    | Valid updatedLevel -> updatedLevel
+//    | Invalid _ -> level
 //
-//module GameLoop =
+//let runAi (level: level) =
+//    let npdCommands = level |> npcIds |> Seq.map getAiCommand
+//    Valid (npdCommands |> Seq.fold runAiCommand level)
 //
-//    let getPlayerCommand level = level.playerId
+//let rec gameLoop level =
+//    let turnResult = 
+//        result {
+//            let! playerMoved = level |> getPlayerCommand level.playerId
+//            let! aiMoved = playerMoved |> runAi
+//            return aiMoved
+//        }
+//    match turnResult with
+//    | Valid turnLevel -> 
+//    | Invalid
 //
-//    let getAiCommand actorId level = level.playerId
 //
-//    let rec gameLoop level =
-//        let playerCommand = [getPlayerCommand] 
-//
-//        let actorCommands = 
-//            level.actors 
-//            |> Seq.except (fun actor -> actor.id == level.actorId) 
-//            |> Seq.map (fun actor -> getAiCommand actor.id)
-
-
-
 
 
 

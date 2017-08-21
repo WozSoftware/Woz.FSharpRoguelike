@@ -78,6 +78,9 @@ module Actor =
     let expectStatFor_ stat = 
         stats_ >-> expectValue_ stat 
 
+    let currentHealth_ = 
+        (expectStatFor_ Health) >-> Stat.current_
+
     let location_ =
         (fun actor -> actor.location), 
         (fun location actor -> { actor with location = location})    

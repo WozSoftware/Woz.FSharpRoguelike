@@ -38,3 +38,14 @@ let distanceFrom target location =
     let sqr x = x * x
     let distanceSq = (sqr diff.x) + (sqr diff.y)
     sqrt (float distanceSq)
+
+module Directions =
+    let north = {x = 0; y = 1}
+    let northEast = {x = 1; y = 1}
+    let east = {x = 1; y = 0}
+    let southEast = {x = 1; y = -1}
+    let south = {x = 0; y = -1}
+    let southWest = {x = -1; y = -1}
+    let west = {x = -1; y = 0}
+    let northWest = {x = -1; y = 1}
+
