@@ -6,6 +6,7 @@ open Commands
 open Queries.Level
 open Monads
 open Monads.Result
+open RenderEngine
 
 // Stub
 let private getAiCommand = buildIdleCommand
@@ -38,6 +39,7 @@ let rec gameLoop level =
     if not (isAlive player) then
         ()
     else
+        render turnLevel
         gameLoop turnLevel
 
 
