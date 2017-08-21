@@ -19,10 +19,10 @@ let runAi (level: level) =
     let npdCommands = level |> npcIds |> Seq.map getAiCommand
     Valid (npdCommands |> Seq.fold runAiCommand level)
 
-let runTurn level = 
+let runTurn playerCommand level = 
     let turnResult = 
         result {
-            let! playerMoved = level |> getPlayerCommand level.playerId
+            let! playerMoved = level |> playerCommand
             let! aiMoved = playerMoved |> runAi
             return aiMoved
         }
@@ -32,7 +32,8 @@ let runTurn level =
     | Invalid _ -> level
 
 let rec gameLoop level =
-    let turnLevel = runTurn level
+    let playerCommand = getPlayerCommand level.playerId
+    let turnLevel = level |> runTurn playerCommand
     let player = level |> expectActor turnLevel.playerId
     if not (isAlive player) then
         ()
