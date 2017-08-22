@@ -33,13 +33,14 @@ let runTurn playerCommand level =
     | Invalid _ -> level
 
 let rec gameLoop level =
+    render level
+
     let playerCommand = getPlayerCommand level.playerId
     let turnLevel = level |> runTurn playerCommand
     let player = level |> expectActor turnLevel.playerId
     if not (isAlive player) then
         ()
     else
-        render turnLevel
         gameLoop turnLevel
 
 
