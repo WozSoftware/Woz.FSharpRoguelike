@@ -15,7 +15,7 @@ let private selectActorCommand direction actorId level =
     resultOrElse {
         return! selectCommand isValidMove buildMoveActorCommand direction actorId level
         return! selectCommand canOpenDoor buildOpenDoorCommand direction actorId level
-        //return! selectCommand canCloseDoor buildCloseDoorCommand direction actorId level
+        return! (buildIdleCommand actorId level)
     }
 
 let getPlayerCommand actorId =

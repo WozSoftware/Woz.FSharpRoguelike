@@ -69,8 +69,9 @@ module Level =
     
     let private testDoor test direction actorId level =
         result {
-            let! (_, validTarget) = level |> isValidDirection direction actorId 
+            let! (actor, validTarget) = level |> isValidDirection direction actorId 
             let! door = level |> doorExists validTarget 
+            let! canReach = actor.location |> canReachDoor validTarget 
             let! _ = door |> test
             return level
         }
@@ -85,6 +86,6 @@ module Level =
             return level
         }
 
-    let canOpenDoor direction = testDoor canDoorBeOpened direction
+    let canOpenDoor = testDoor canDoorBeOpened 
     
-    let canCloseDoor direction = testDoor canDoorBeClosed direction
+    let canCloseDoor = testDoor canDoorBeClosed 

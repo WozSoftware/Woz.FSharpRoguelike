@@ -58,11 +58,11 @@ module Level =
         level |> Optic.set (expectDoorAt_ location) state
     
     let openDoor direction actorId level = 
-        let (actor, targetLocation) = level |> actorTarget direction actorId
+        let (_, targetLocation) = level |> actorTarget direction actorId
         level |> placeDoor Open targetLocation 
 
     let closeDoor direction actorId level = 
-        let (actor, targetLocation) = level |> actorTarget direction actorId
+        let (_, targetLocation) = level |> actorTarget direction actorId
         level |> placeDoor Closed targetLocation 
 
     //let unlockDoor = placeDoor (Some Closed)
