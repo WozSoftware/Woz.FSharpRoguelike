@@ -11,14 +11,13 @@ open Vector
 
 type tile = Void | Floor | Wall | Water 
 
-type map = 
-    {
-        tiles: tile[][]
-        topRight: vector
-    } 
+type map = {tiles: tile[][]} 
 
 module Map = 
-    let bottomLeft = {x = 0; y = 0}
+    let bottomLeft = vector.create 0 0
+    let width map = map.tiles.[0].Length - 1
+    let height map = map.tiles.Length - 1
+    let topRight map = vector.create (width map) (height map)
 
 // -----------------------------------------
 
@@ -70,7 +69,7 @@ type actor =
 module Actor =
     let stats_ =
         (fun actor -> actor.stats), 
-        (fun stats actor -> { actor with stats = stats})    
+        (fun stats actor -> {actor with stats = stats})    
 
     let statFor_ stat = 
         stats_ >-> Map.value_ stat 
@@ -83,7 +82,7 @@ module Actor =
 
     let location_ =
         (fun actor -> actor.location), 
-        (fun location actor -> { actor with location = location})    
+        (fun location actor -> {actor with location = location})    
 
 // -----------------------------------------
 
@@ -103,11 +102,11 @@ type level =
 module Level =
     let playerId_ =
         (fun level -> level.playerId), 
-        (fun playerId level -> { level with playerId = playerId})    
+        (fun playerId level -> {level with playerId = playerId})    
 
     let doors_ =
         (fun level -> level.doors), 
-        (fun doors level -> { level with doors = doors})    
+        (fun doors level -> {level with doors = doors})    
 
     let doorAt_ location = 
         doors_ >-> Map.value_ location 
@@ -117,7 +116,7 @@ module Level =
 
     let actors_ =
         (fun level -> level.actors), 
-        (fun actors level -> { level with actors = actors})    
+        (fun actors level -> {level with actors = actors})    
 
     let actorWithId_ actorId = 
         actors_ >-> Map.value_ actorId 
@@ -127,7 +126,7 @@ module Level =
 
     let mapActors_ =
         (fun level -> level.mapActors), 
-        (fun mapActors level -> { level with mapActors = mapActors})    
+        (fun mapActors level -> {level with mapActors = mapActors})    
 
     let mapActorAt_ location = 
         mapActors_ >-> Map.value_ location 

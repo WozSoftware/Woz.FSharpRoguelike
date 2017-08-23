@@ -12,9 +12,16 @@ let private composeCommand validation operation level =
         return operation validLevel
     }
 
-let buildIdleCommand (actorId: actorId) = (fun (level: level) -> Valid level)
+let private buildCommand validator operation direction actorId =
+    let test = validator direction actorId
+    let action = operation direction actorId
+    composeCommand test action
 
-let buildMoveActorCommand direction actorId =
-    let validator = isValidMove direction actorId
-    let operation = moveActor direction actorId
-    composeCommand validator operation
+let buildIdleCommand (actorId: actorId) level = Valid level
+
+let buildMoveActorCommand = buildCommand isValidMove moveActor 
+
+let buildOpenDoorCommand = buildCommand canOpenDoor openDoor 
+
+let buildCloseDoorCommand = buildCommand canCloseDoor closeDoor 
+    

@@ -11,16 +11,16 @@ open RenderEngine
 // Stub
 let private getAiCommand = buildIdleCommand
 
-let runAiCommand level command  =
+let private runAiCommand level command  =
     match level |> command with
     | Valid updatedLevel -> updatedLevel
     | Invalid _ -> level
 
-let runAi (level: level) =
+let private runAi (level: level) =
     let npdCommands = level |> npcIds |> Seq.map getAiCommand
     Valid (npdCommands |> Seq.fold runAiCommand level)
 
-let runTurn playerCommand level = 
+let private runTurn playerCommand level = 
     let turnResult = 
         result {
             let! playerMoved = level |> playerCommand

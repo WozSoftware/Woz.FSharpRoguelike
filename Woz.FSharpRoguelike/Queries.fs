@@ -5,12 +5,13 @@ open Aether
 open GameTypes
 open GameTypes.Actor
 open GameTypes.Level
+open GameTypes.Map
 open Vector
 
 module Level =
     let hasCoordinate location level = 
         location >= Map.bottomLeft && 
-        location <= level.map.topRight
+        location <= topRight level.map
 
     let getTile location level = 
         level.map.tiles.[location.y].[location.x]
@@ -37,14 +38,23 @@ module Level =
     let isAlive actor =
         let health = actor |> Optic.get (currentHealth_) 
         health > 0 
+
+    let getDoor location level =
+        level |> Optic.get (doorAt_ location)
+
+    let expectDoor location level =
+        level |> Optic.get (expectDoorAt_ location)
     
+    let hasDoor location level =
+        level |> getDoor location |> isSome
+
     let private isBlockingTile location level =
         match level |> getTile location with
         | Void | Wall -> true
         | Floor | Water -> false
 
     let private isBlockingDoor location level = 
-        match level |> Optic.get (doorAt_ location) with
+        match level |> getDoor location with
         | Some door -> 
             match door with 
             | Closed | Locked _ -> true

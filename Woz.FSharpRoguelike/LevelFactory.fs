@@ -20,16 +20,13 @@ let private testLevelTemplate =
         "                                            "  // y = 11
     ]
 
-let private width = testLevelTemplate.[0].Length
-let private height = testLevelTemplate.Length
-
 let private testPlayer =
     {
         id = 1;
         isNpc = false;
         name = "player";
         stats = [(Health, {current = 10; max = 10})] |> Map.ofSeq
-        location = {x = 9; y = 6};
+        location = vector.create 9 6
         backpack = []
     }
 
@@ -48,7 +45,7 @@ let testLevel =
     let level = 
         {
             playerId = testPlayer.id;
-            map = {tiles = testMap; topRight = {x = testMap.[0].Length - 1; y = testMap.Length - 1}}
+            map = {tiles = testMap}
             doors = Map.empty<vector, door>
             actors = Map.empty<actorId, actor>
             items = Map.empty<itemId, item>
@@ -56,4 +53,7 @@ let testLevel =
             mapItems = Map.empty<vector, List<itemId>>
         }
 
-    level |> spawnActor testPlayer 
+    level 
+        |> spawnActor testPlayer 
+        |> placeDoor Open (vector.create 19 6)
+        |> placeDoor Closed (vector.create 29 6)

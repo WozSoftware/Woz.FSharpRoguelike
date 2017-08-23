@@ -21,6 +21,13 @@ module Stat =
 module Level =
     open Stat
 
+    // Actor
+
+    let actorTarget direction actorId level =
+        let actor = level |> expectActor actorId
+        let targetLocation = actor.location + direction
+        (actor, targetLocation)
+
     let spawnActor actor level =
         level
             |> Optic.set (expectActorWithId_ actor.id) actor
@@ -33,8 +40,7 @@ module Level =
             |> Optic.set (mapActorAt_ actor.location) None
 
     let moveActor direction actorId level =
-        let actor = level |> expectActor actorId
-        let targetLocation = actor.location + direction
+        let (actor, targetLocation) = level |> actorTarget direction actorId
         let movedActor = actor |> Optic.set location_ targetLocation
         level 
             |> Optic.set (expectActorWithId_ actorId) movedActor
@@ -45,6 +51,22 @@ module Level =
         let actorHealth_ = expectActorWithId_ actorId >-> expectStatFor_ Health
         let updatedHealth = decreaseCurrent damage (level |> Optic.get actorHealth_)
         level |> Optic.set actorHealth_ updatedHealth
+
+    // Door
+
+    let placeDoor state location level =
+        level |> Optic.set (expectDoorAt_ location) state
+    
+    let openDoor direction actorId level = 
+        let (actor, targetLocation) = level |> actorTarget direction actorId
+        level |> placeDoor Open targetLocation 
+
+    let closeDoor direction actorId level = 
+        let (actor, targetLocation) = level |> actorTarget direction actorId
+        level |> placeDoor Closed targetLocation 
+
+    //let unlockDoor = placeDoor (Some Closed)
+
 
 
     
