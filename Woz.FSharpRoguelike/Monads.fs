@@ -12,7 +12,6 @@ module Result =
 
     type resultFactory() =
         member this.Bind(monad, func) = bind func monad
-
         member this.Return(value) = Valid value
 
     type resultOrElseFactory() =
@@ -29,7 +28,6 @@ module Result =
 module Maybe =
     type maybeFactory() =
         member this.Bind(monad, func) = Option.bind func monad
-
         member this.Return(value) = Some value
 
     type maybeOrElseFactory() =
