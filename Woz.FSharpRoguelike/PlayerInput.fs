@@ -15,14 +15,25 @@ let private selectActorCommand direction actorId level =
     resultOrElse {
         return! selectCommand isValidMove buildMoveActorCommand direction actorId level
         return! selectCommand canOpenDoor buildOpenDoorCommand direction actorId level
-        return! (buildIdleCommand actorId level)
+        return! (invalidCommand level)
     }
 
-let getPlayerCommand actorId =
+let rec handleKeyPress activeBuilder actorId =
+    let workingBuilder = 
+        match activeBuilder with
+        | Some builder -> builder
+        | None -> selectActorCommand
+
     match Console.ReadKey().Key with
-    | ConsoleKey.W -> selectActorCommand north actorId
-    | ConsoleKey.A -> selectActorCommand west actorId
-    | ConsoleKey.S -> selectActorCommand south actorId
-    | ConsoleKey.D -> selectActorCommand east actorId
-    | _ -> buildIdleCommand actorId
+    | ConsoleKey.O -> handleKeyPress (Some buildOpenDoorCommand) actorId
+    | ConsoleKey.C -> handleKeyPress (Some buildCloseDoorCommand) actorId
+    | ConsoleKey.W -> workingBuilder north actorId
+    | ConsoleKey.A -> workingBuilder west actorId
+    | ConsoleKey.S -> workingBuilder south actorId
+    | ConsoleKey.D -> workingBuilder east actorId
+    | ConsoleKey.Spacebar -> idleCommand
+    | _ -> invalidCommand
+
+
+let getPlayerCommand actorId = handleKeyPress None actorId
 

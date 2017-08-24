@@ -9,7 +9,7 @@ open Monads.Result
 open RenderEngine
 
 // Stub
-let private getAiCommand = buildIdleCommand
+let private getAiCommand actorId = idleCommand
 
 let private runAiCommand level command  =
     match level |> command with

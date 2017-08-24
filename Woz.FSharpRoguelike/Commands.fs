@@ -17,7 +17,9 @@ let private buildCommand validator operation direction actorId =
     let action = operation direction actorId
     composeCommand test action
 
-let buildIdleCommand (actorId: actorId) level = Valid level
+let invalidCommand (level: level) = Invalid "Unknow command"
+
+let idleCommand (level: level) = Valid level
 
 let buildMoveActorCommand = buildCommand isValidMove moveActor 
 
