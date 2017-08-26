@@ -5,7 +5,10 @@ open Aether.Operators
 open Aether.Optics
 open AetherExtensions.Optics
 open AetherExtensions.Optics.Map
+open AetherExtensions.Optics.List
 open Vector
+
+type id = int
 
 // -----------------------------------------
 
@@ -28,9 +31,10 @@ type door =
 
 // -----------------------------------------
 
-type itemId = int
+type item = {id: id; name: string }
 
-type item = {id: itemId; name: string }
+module Item =
+    let hasId id item = item.id = id
 
 // -----------------------------------------
 
@@ -54,8 +58,6 @@ module Stat =
 
 // -----------------------------------------
 
-type actorId = int
-
 type actor = 
     {
         id: int
@@ -63,11 +65,13 @@ type actor =
         name: string
         stats: Map<stats, stat>
         location: vector
-        backpack: List<itemId>
+        backpack: List<item>
     }
 
 module Actor =
-    let stats_ =
+    let hasId id stat = stat.id = id
+
+    let private stats_ =
         (fun actor -> actor.stats), 
         (fun stats actor -> {actor with stats = stats})    
 
@@ -84,26 +88,40 @@ module Actor =
         (fun actor -> actor.location), 
         (fun location actor -> {actor with location = location})    
 
+    let backpack_ =
+        (fun actor -> actor.backpack), 
+        (fun backpack actor -> {actor with backpack = backpack})    
+
+    let backpackItemWithId_ id = 
+        backpack_ >-> (where_ (Item.hasId id))
+
+    let expectBackpackItemWithId_ id = 
+        backpack_ >-> expectWhere_ (Item.hasId id)
+
 // -----------------------------------------
 
 type level = 
     {
-        playerId: actorId
+        playerId: id
 
         map: map; 
         doors: Map<vector, door>; 
-        actors: Map<actorId, actor>
+        actors: Map<id, actor>
         items: Map<vector, List<item>>
 
-        mapActors: Map<vector, actorId>
+        mapActors: Map<vector, id>
     }
 
 module Level =
+    // Player
+
     let playerId_ =
         (fun level -> level.playerId), 
         (fun playerId level -> {level with playerId = playerId})    
+    
+    // Doors
 
-    let doors_ =
+    let private doors_ =
         (fun level -> level.doors), 
         (fun doors level -> {level with doors = doors})    
 
@@ -112,8 +130,10 @@ module Level =
 
     let expectDoorAt_ location = 
         doors_ >-> expectValue_ location 
+    
+    // Actors
 
-    let actors_ =
+    let private actors_ =
         (fun level -> level.actors), 
         (fun actors level -> {level with actors = actors})    
 
@@ -123,7 +143,7 @@ module Level =
     let expectActorWithId_ actorId = 
         actors_ >-> expectValue_ actorId 
 
-    let mapActors_ =
+    let private mapActors_ =
         (fun level -> level.mapActors), 
         (fun mapActors level -> {level with mapActors = mapActors})    
 
@@ -132,4 +152,20 @@ module Level =
 
     let expectMapActorAt_ location = 
         mapActors_ >-> expectValue_ location 
- 
+
+    // Items
+
+    let private items_ = 
+        (fun level -> level.items), 
+        (fun items level -> {level with items = items})    
+
+    let itemsAt_ location = 
+        items_ >-> Map.value_ location >-> notEmpty_
+
+    let itemWithId_ location id = 
+        itemsAt_ location >-> where_ (Item.hasId id)
+
+    let expectItemWithId_ location id = 
+        itemsAt_ location >-> expectWhere_ (Item.hasId id)
+
+   

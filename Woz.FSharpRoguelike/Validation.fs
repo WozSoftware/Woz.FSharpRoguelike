@@ -12,12 +12,12 @@ open Monads.Result
 // Building blocks
 
 let private actorExists actorId level =
-    match level |> getActor actorId with
+    match level |> findActor actorId with
     | Some actor -> Valid actor
     | None -> Invalid "The actor does not exist"
 
 let private doorExists location level =
-    match level |> getDoor location with
+    match level |> findDoor location with
     | Some door -> Valid door
     | None -> Invalid "There is no door there"
     
@@ -57,6 +57,13 @@ let private isValidMoveDistance target location =
     else
         Invalid "You can't move that far" 
 
+let private itemsAtLocation location level =
+    let items = level |> getItems location
+    if items |> Seq.isEmpty then
+        Invalid "No items to take" 
+    else
+        Valid items
+
 let private isValidDirection direction actorId level =
     result {
         let! actor = level |> actorExists actorId 
@@ -68,8 +75,8 @@ let private isValidDirection direction actorId level =
 let private testDoor test direction actorId level =
     result {
         let! (actor, validTarget) = level |> isValidDirection direction actorId 
-        let! door = level |> doorExists validTarget 
         let! canReach = actor.location |> canReachDoor validTarget 
+        let! door = level |> doorExists validTarget 
         let! _ = door |> test
         return level
     }
@@ -79,7 +86,7 @@ let private testDoor test direction actorId level =
 let isValidMove direction actorId level =
     result {
         let! (actor, validTarget) = level |> isValidDirection direction actorId 
-        let! tile = level |> isEmptyTile validTarget 
+        let! _ = level |> isEmptyTile validTarget 
         let! validMove = actor.location |> isValidMoveDistance validTarget 
         return level
     }
@@ -87,3 +94,11 @@ let isValidMove direction actorId level =
 let canOpenDoor = testDoor canDoorBeOpened 
     
 let canCloseDoor = testDoor canDoorBeClosed 
+
+let canTakeItems direction actorId level =
+    result {
+        let! (actor, validTarget) = level |> isValidDirection direction actorId 
+        let! _ = actor.location |> canReachDoor validTarget 
+        let! _ = level |> itemsAtLocation validTarget 
+        return level
+    }

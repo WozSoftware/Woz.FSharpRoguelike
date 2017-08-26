@@ -29,24 +29,24 @@ module Level =
     let hasActor location level =
         level |> Optic.get (mapActorAt_ location) |> isSome
 
-    let getActor actorId level =
-        level |> Optic.get (actorWithId_ actorId)
+    let findActor actorId =
+        Optic.get (actorWithId_ actorId)
 
-    let expectActor actorId level =
-        level |> Optic.get (expectActorWithId_ actorId)
+    let expectActor actorId =
+        Optic.get (expectActorWithId_ actorId)
 
     let isAlive actor =
         let health = actor |> Optic.get (currentHealth_) 
         health > 0 
 
-    let getDoor location level =
-        level |> Optic.get (doorAt_ location)
+    let findDoor location =
+        Optic.get (doorAt_ location)
 
-    let expectDoor location level =
-        level |> Optic.get (expectDoorAt_ location)
+    let expectDoor location =
+        Optic.get (expectDoorAt_ location)
     
     let hasDoor location level =
-        level |> getDoor location |> isSome
+        level |> findDoor location |> isSome
 
     let private isBlockingTile location level =
         match level |> getTile location with
@@ -54,7 +54,7 @@ module Level =
         | Floor | Water -> false
 
     let private isBlockingDoor location level = 
-        match level |> getDoor location with
+        match level |> findDoor location with
         | Some door -> 
             match door with 
             | Closed | Locked _ -> true
@@ -74,8 +74,16 @@ module Level =
 
     let locationBlocksMove = checkLocationFor blockMove
 
- //   let getItems location level =
- //       // Build a lens when revisit items
- //       match level.mapItems.TryFind location with
- //       | Some items -> items
- //       | None -> []
+    let getItems location = Optic.get (itemsAt_ location)
+
+    let hasItems location level = 
+        level 
+            |> getItems location 
+            |> Seq.isEmpty 
+            |> not
+
+    let findItem location id = 
+        Optic.get (itemWithId_ location id)
+
+    let expectItem location id = 
+        Optic.get (expectItemWithId_ location id)

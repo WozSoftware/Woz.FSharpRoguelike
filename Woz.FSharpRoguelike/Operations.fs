@@ -50,6 +50,11 @@ let hurtActor damage actorId level =
     let updatedHealth = decreaseCurrent damage (level |> Optic.get actorHealth_)
     level |> Optic.set actorHealth_ updatedHealth
 
+let addItemToBackpack (item: item) actorId level =
+    let actor = level |> expectActor actorId 
+    let newActor = actor |> Optic.set (expectBackpackItemWithId_ item.id) item
+    level |> Optic.set (expectActorWithId_ actorId) newActor
+
 // Door
 
 let placeDoor state location level =
@@ -64,6 +69,20 @@ let closeDoor direction actorId level =
     level |> placeDoor Closed targetLocation 
 
 //let unlockDoor = placeDoor (Some Closed)
+
+// Items
+
+let placeItem (item: item) location level =
+    level |> Optic.set (itemWithId_ location item.id) (Some item)
+
+let takeItems direction actorId level =
+    let (actor, targetLocation) = level |> actorTarget direction actorId
+    let locationItems = level |> Optic.get (itemsAt_ targetLocation)
+    let newBackpack = List.concat [locationItems; actor |> Optic.get backpack_]
+    let newActor = actor |> Optic.set backpack_ newBackpack
+    level 
+        |> Optic.set (expectActorWithId_ actorId) newActor
+        |> Optic.set (itemsAt_ targetLocation) []
 
 
 

@@ -37,6 +37,8 @@ let private charToTile character =
     | '~' -> Water
     | _ -> Void
 
+let testItem = {id = 2; name = "Item"}
+
 let private testMap =
     let rowToTiles row = row |> Seq.map charToTile |> Array.ofSeq
     testLevelTemplate |> Seq.rev |> Seq.map rowToTiles |> Array.ofSeq
@@ -47,12 +49,13 @@ let testLevel =
             playerId = testPlayer.id;
             map = {tiles = testMap}
             doors = Map.empty<vector, door>
-            actors = Map.empty<actorId, actor>
+            actors = Map.empty<id, actor>
             items = Map.empty<vector, List<item>>
-            mapActors = Map.empty<vector, actorId>
+            mapActors = Map.empty<vector, id>
         }
 
     level 
         |> spawnActor testPlayer 
         |> placeDoor Open (vector.create 19 6)
         |> placeDoor Closed (vector.create 29 6)
+        |> placeItem testItem (vector.create 18 5)

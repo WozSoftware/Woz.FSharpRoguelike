@@ -22,13 +22,19 @@ let private doorToChar door =
     | Closed -> '+'
     | Locked _ -> '*'
 
+let private asOption value = if value then Some () else None
+
 let private renderTile level location =
     let char = maybeOrElse {
         return! level 
             |> Optic.get (mapActorAt_ location) 
             |> Option.bind (fun actorId -> Some '@')
         return! level 
-            |> getDoor location 
+            |> hasItems location 
+            |> asOption
+            |> Option.bind (fun _ -> Some '?')
+        return! level 
+            |> findDoor location 
             |> Option.bind (fun door -> Some (doorToChar door))
         return! level 
             |> getTile location 

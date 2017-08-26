@@ -26,4 +26,6 @@ let buildMoveActorCommand = buildCommand isValidMove moveActor
 let buildOpenDoorCommand = buildCommand canOpenDoor openDoor 
 
 let buildCloseDoorCommand = buildCommand canCloseDoor closeDoor 
+
+let buildTakeItemsCommand = buildCommand canTakeItems takeItems
     

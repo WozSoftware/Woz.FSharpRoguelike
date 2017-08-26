@@ -8,9 +8,9 @@ open System.Runtime.InteropServices
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [<assembly: AssemblyTitle("Woz.FSharpRoguelike")>]
-[<assembly: AssemblyDescription("")>]
+[<assembly: AssemblyDescription("Roguelike game in F#")>]
 [<assembly: AssemblyConfiguration("")>]
-[<assembly: AssemblyCompany("")>]
+[<assembly: AssemblyCompany("Woz.Software")>]
 [<assembly: AssemblyProduct("Woz.FSharpRoguelike")>]
 [<assembly: AssemblyCopyright("Copyright ©  2017")>]
 [<assembly: AssemblyTrademark("")>]

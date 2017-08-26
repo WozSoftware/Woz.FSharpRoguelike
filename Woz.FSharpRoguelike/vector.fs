@@ -42,6 +42,7 @@ let distanceFrom target location =
     sqrt (float distanceSq)
 
 module Directions =
+    let idle = vector.create 0 0
     let north = vector.create 0 1
     let northEast = vector.create 1 1
     let east = vector.create 1 0

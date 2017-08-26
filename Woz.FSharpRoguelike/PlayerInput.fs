@@ -27,13 +27,13 @@ let rec handleKeyPress activeBuilder actorId =
     match Console.ReadKey().Key with
     | ConsoleKey.O -> handleKeyPress (Some buildOpenDoorCommand) actorId
     | ConsoleKey.C -> handleKeyPress (Some buildCloseDoorCommand) actorId
+    | ConsoleKey.T -> handleKeyPress (Some buildTakeItemsCommand) actorId
     | ConsoleKey.W -> workingBuilder north actorId
     | ConsoleKey.A -> workingBuilder west actorId
     | ConsoleKey.S -> workingBuilder south actorId
     | ConsoleKey.D -> workingBuilder east actorId
     | ConsoleKey.Spacebar -> idleCommand
     | _ -> invalidCommand
-
 
 let getPlayerCommand actorId = handleKeyPress None actorId
 
