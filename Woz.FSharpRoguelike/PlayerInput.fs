@@ -6,16 +6,15 @@ open Commands
 open Vector.Directions
 open Validation
 
-let private selectCommand validator operation direction actorId level =
-    level 
-        |> validator direction actorId 
-        |> bind (fun l -> operation direction actorId l)
+let private selectCommand validator operation direction actorId =
+    validator direction actorId 
+    >> bind (fun l -> operation direction actorId l)
 
 let private selectActorCommand direction actorId level =
     resultOrElse {
         return! selectCommand isValidMove buildMoveActorCommand direction actorId level
         return! selectCommand canOpenDoor buildOpenDoorCommand direction actorId level
-        return! (invalidCommand level)
+        return! invalidCommand level
     }
 
 let rec handleKeyPress activeBuilder actorId =
@@ -35,5 +34,5 @@ let rec handleKeyPress activeBuilder actorId =
     | ConsoleKey.Spacebar -> idleCommand
     | _ -> invalidCommand
 
-let getPlayerCommand actorId = handleKeyPress None actorId
+let getPlayerCommand = handleKeyPress None 
 

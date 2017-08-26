@@ -133,7 +133,7 @@ module Level =
     
     // Actors
 
-    let private actors_ =
+    let actors_ =
         (fun level -> level.actors), 
         (fun actors level -> {level with actors = actors})    
 

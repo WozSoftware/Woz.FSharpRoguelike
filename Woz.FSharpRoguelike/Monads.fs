@@ -40,3 +40,8 @@ module Maybe =
 
     let maybe = new maybeFactory()
     let maybeOrElse = new maybeOrElseFactory()
+
+type state<'s, 'a> = ('s -> 's * 'a)
+
+
+

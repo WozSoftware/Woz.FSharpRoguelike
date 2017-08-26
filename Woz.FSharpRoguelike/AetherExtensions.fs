@@ -26,8 +26,8 @@ module Optics =
                 | true -> None
                 | false -> Some list)
 
-        let private without (predicate: ('a -> bool)) list =
-            list |> List.filter (not predicate) 
+        let private without (predicate: ('a -> bool)) =
+            List.filter (not predicate) 
 
         let where_ (predicate: ('a -> bool)) : Lens<list<'a>, 'a option> =
             List.tryFind predicate,

@@ -69,12 +69,12 @@ let private isValidDirection direction actorId level =
         let! actor = level |> actorExists actorId 
         let targetLocation = (actor |> Optic.get location_) + direction
         let! validTarget = level |> isValidLocation targetLocation
-        return (actor, validTarget)
+        return actor, validTarget
     }
     
 let private testDoor test direction actorId level =
     result {
-        let! (actor, validTarget) = level |> isValidDirection direction actorId 
+        let! actor, validTarget = level |> isValidDirection direction actorId 
         let! _ = actor.location |> canReach validTarget 
         let! door = level |> doorExists validTarget 
         let! _ = door |> test
@@ -85,7 +85,7 @@ let private testDoor test direction actorId level =
 
 let isValidMove direction actorId level =
     result {
-        let! (actor, validTarget) = level |> isValidDirection direction actorId 
+        let! actor, validTarget = level |> isValidDirection direction actorId 
         let! _ = actor.location |> isValidMoveDistance validTarget 
         let! _ = level |> isEmptyTile validTarget 
         return level
@@ -97,7 +97,7 @@ let canCloseDoor = testDoor canDoorBeClosed
 
 let canTakeItems direction actorId level =
     result {
-        let! (actor, validTarget) = level |> isValidDirection direction actorId 
+        let! actor, validTarget = level |> isValidDirection direction actorId 
         let! _ = actor.location |> canReach validTarget 
         let! _ = level |> itemsAtLocation validTarget 
         return level

@@ -24,7 +24,7 @@ let private increaseMax amount stat =
 let actorTarget direction actorId level =
     let actor = level |> expectActor actorId
     let targetLocation = actor.location + direction
-    (actor, targetLocation)
+    actor, targetLocation
 
 let spawnActor actor level =
     level
@@ -38,7 +38,7 @@ let removeActor actorId level =
         |> Optic.set (mapActorAt_ actor.location) None
 
 let moveActor direction actorId level =
-    let (actor, targetLocation) = level |> actorTarget direction actorId
+    let actor, targetLocation = level |> actorTarget direction actorId
     let movedActor = actor |> Optic.set location_ targetLocation
     level 
         |> Optic.set (expectActorWithId_ actorId) movedActor
@@ -61,11 +61,11 @@ let placeDoor state location level =
     level |> Optic.set (expectDoorAt_ location) state
     
 let openDoor direction actorId level = 
-    let (_, targetLocation) = level |> actorTarget direction actorId
+    let _, targetLocation = level |> actorTarget direction actorId
     level |> placeDoor Open targetLocation 
 
 let closeDoor direction actorId level = 
-    let (_, targetLocation) = level |> actorTarget direction actorId
+    let _, targetLocation = level |> actorTarget direction actorId
     level |> placeDoor Closed targetLocation 
 
 //let unlockDoor = placeDoor (Some Closed)
@@ -76,7 +76,7 @@ let placeItem (item: item) location level =
     level |> Optic.set (itemWithId_ location item.id) (Some item)
 
 let takeItems direction actorId level =
-    let (actor, targetLocation) = level |> actorTarget direction actorId
+    let actor, targetLocation = level |> actorTarget direction actorId
     let locationItems = level |> Optic.get (itemsAt_ targetLocation)
     let newBackpack = List.concat [locationItems; actor |> Optic.get backpack_]
     let newActor = actor |> Optic.set backpack_ newBackpack

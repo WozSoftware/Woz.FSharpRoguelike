@@ -24,21 +24,28 @@ let private doorToChar door =
 
 let private asOption value = if value then Some () else None
 
+let private maybeActor location = 
+    Optic.get (mapActorAt_ location) 
+    >> Option.bind (fun actorId -> Some '@')
+
+let private maybeItems location =
+    hasItems location 
+    >> asOption 
+    >> Option.bind (fun _ -> Some '?')
+
+let private maybeDoor location =
+    findDoor location 
+    >> Option.bind (fun door -> Some (doorToChar door))
+
+let private maybeTile location =
+    getTile location >> tileToChar >> Some
+
 let private renderTile level location =
     let char = maybeOrElse {
-        return! level 
-            |> Optic.get (mapActorAt_ location) 
-            |> Option.bind (fun actorId -> Some '@')
-        return! level 
-            |> hasItems location 
-            |> asOption
-            |> Option.bind (fun _ -> Some '?')
-        return! level 
-            |> findDoor location 
-            |> Option.bind (fun door -> Some (doorToChar door))
-        return! level 
-            |> getTile location 
-            |> tileToChar |> Some
+        return! level |> maybeActor location
+        return! level |> maybeItems location 
+        return! level |> maybeDoor location 
+        return! level |> maybeTile location 
     }
     match char with
     | Some c -> c

@@ -16,8 +16,8 @@ module Level =
     let getTile location level = 
         level.map.tiles.[location.y].[location.x]
     
-    let isPlayerId level actorId = actorId = level.playerId
-    let isNpcId level actorId = actorId <> level.playerId
+    let isPlayerId level = (=) level.playerId
+    let isNpcId level = (<>) level.playerId
 
     let actorIds level =
         level.actors |> Map.toSeq |> Seq.map fst
@@ -36,8 +36,7 @@ module Level =
         Optic.get (expectActorWithId_ actorId)
 
     let isAlive actor =
-        let health = actor |> Optic.get (currentHealth_) 
-        health > 0 
+        actor |> Optic.get (currentHealth_) > 0 
 
     let findDoor location =
         Optic.get (doorAt_ location)
@@ -76,11 +75,8 @@ module Level =
 
     let getItems location = Optic.get (itemsAt_ location)
 
-    let hasItems location level = 
-        level 
-            |> getItems location 
-            |> Seq.isEmpty 
-            |> not
+    let hasItems location = 
+        getItems location >> Seq.isEmpty >> not
 
     let findItem location id = 
         Optic.get (itemWithId_ location id)
