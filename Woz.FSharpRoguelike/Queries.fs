@@ -74,8 +74,8 @@ module Level =
 
     let locationBlocksMove = checkLocationFor blockMove
 
-    let getItems location level =
-        // Build a lens when revisit items
-        match level.mapItems.TryFind location with
-        | Some items -> items
-        | None -> []
+ //   let getItems location level =
+ //       // Build a lens when revisit items
+ //       match level.mapItems.TryFind location with
+ //       | Some items -> items
+ //       | None -> []

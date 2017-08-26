@@ -3,8 +3,8 @@
 open Monads
 open Monads.Result
 open GameTypes
-open Operations.Level
-open Validation.Level
+open Operations
+open Validation
 
 let private composeCommand validation operation level =
     result {

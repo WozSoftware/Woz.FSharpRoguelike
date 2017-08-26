@@ -93,10 +93,9 @@ type level =
         map: map; 
         doors: Map<vector, door>; 
         actors: Map<actorId, actor>
-        items: Map<itemId, item>
+        items: Map<vector, List<item>>
 
         mapActors: Map<vector, actorId>
-        mapItems: Map<vector, List<itemId>>
     }
 
 module Level =

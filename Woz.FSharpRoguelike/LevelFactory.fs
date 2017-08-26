@@ -2,7 +2,7 @@
 
 open GameTypes
 open Vector
-open Operations.Level
+open Operations
 
 let private testLevelTemplate =
     [
@@ -48,9 +48,8 @@ let testLevel =
             map = {tiles = testMap}
             doors = Map.empty<vector, door>
             actors = Map.empty<actorId, actor>
-            items = Map.empty<itemId, item>
+            items = Map.empty<vector, List<item>>
             mapActors = Map.empty<vector, actorId>
-            mapItems = Map.empty<vector, List<itemId>>
         }
 
     level 

@@ -4,9 +4,9 @@ open System
 open Monads.Result
 open Commands
 open Vector.Directions
-open Validation.Level
+open Validation
 
-let selectCommand validator operation direction actorId level =
+let private selectCommand validator operation direction actorId level =
     level 
         |> validator direction actorId 
         |> bind (fun l -> operation direction actorId l)
