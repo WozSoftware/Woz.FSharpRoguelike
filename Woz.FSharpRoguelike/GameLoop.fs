@@ -17,8 +17,11 @@ let private runAiCommand level command  =
     | Invalid _ -> level
 
 let private runAi (level: level) =
-    let npdCommands = level |> npcIds |> Seq.map getAiCommand
-    Valid (npdCommands |> Seq.fold runAiCommand level)
+    level 
+        |> npcIds 
+        |> Seq.map getAiCommand
+        |> Seq.fold runAiCommand level
+        |> Valid
 
 let private runTurn playerCommand level = 
     let turnResult = 

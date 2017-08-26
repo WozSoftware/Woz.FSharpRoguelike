@@ -58,7 +58,6 @@
     <Compile Include="AssemblyInfo.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />
-    <Compile Include="Core.fs" />
     <Compile Include="AetherExtensions.fs" />
     <Compile Include="Monads.fs" />
     <Compile Include="Vector.fs" />

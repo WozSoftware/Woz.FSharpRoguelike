@@ -26,10 +26,9 @@ let actorTarget direction actorId level =
     let targetLocation = actor.location + direction
     actor, targetLocation
 
-let spawnActor actor level =
-    level
-        |> Optic.set (expectActorWithId_ actor.id) actor
-        |> Optic.set (expectMapActorAt_ actor.location) actor.id
+let spawnActor actor =
+    Optic.set (expectActorWithId_ actor.id) actor
+    >> Optic.set (expectMapActorAt_ actor.location) actor.id
     
 let removeActor actorId level =
     let actor = level |> expectActor actorId
@@ -57,8 +56,8 @@ let addItemToBackpack (item: item) actorId level =
 
 // Door
 
-let placeDoor state location level =
-    level |> Optic.set (expectDoorAt_ location) state
+let placeDoor state location =
+    Optic.set (expectDoorAt_ location) state
     
 let openDoor direction actorId level = 
     let _, targetLocation = level |> actorTarget direction actorId
@@ -72,8 +71,8 @@ let closeDoor direction actorId level =
 
 // Items
 
-let placeItem (item: item) location level =
-    level |> Optic.set (itemWithId_ location item.id) (Some item)
+let placeItem (item: item) location =
+    Optic.set (itemWithId_ location item.id) (Some item)
 
 let takeItems direction actorId level =
     let actor, targetLocation = level |> actorTarget direction actorId

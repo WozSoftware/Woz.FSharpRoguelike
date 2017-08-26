@@ -1,6 +1,5 @@
 ﻿module AetherExtensions
 
-open Core
 open Aether 
 
 module Optics =
@@ -26,10 +25,10 @@ module Optics =
                 | true -> None
                 | false -> Some list)
 
-        let private without (predicate: ('a -> bool)) =
-            List.filter (not predicate) 
+        let private without predicate =
+            List.filter (predicate >> not) 
 
-        let where_ (predicate: ('a -> bool)) : Lens<list<'a>, 'a option> =
+        let where_ predicate : Lens<list<'a>, 'a option> =
             List.tryFind predicate,
             (fun itemOption list -> 
                 let cleanList = list |> without predicate
@@ -37,7 +36,7 @@ module Optics =
                 | Some item -> item :: cleanList
                 | None -> cleanList)
 
-        let expectWhere_ (predicate: ('a -> bool)) : Lens<list<'a>, 'a> =
+        let expectWhere_ predicate : Lens<list<'a>, 'a> =
             List.find predicate,
             (fun item list -> 
                 let cleanList = list |> without predicate
