@@ -45,11 +45,11 @@ let private isEmptyTile location level =
     else
         Valid (getTile location level)
 
-let private canReachDoor target location =
+let private canReach target location =
     if location |> distanceFrom target <= 1.0 then
         Valid target
     else
-        Invalid "You can't reach that door" 
+        Invalid "You can't reach that" 
 
 let private isValidMoveDistance target location =
     if location |> distanceFrom target <= 1.0 then
@@ -75,7 +75,7 @@ let private isValidDirection direction actorId level =
 let private testDoor test direction actorId level =
     result {
         let! (actor, validTarget) = level |> isValidDirection direction actorId 
-        let! canReach = actor.location |> canReachDoor validTarget 
+        let! _ = actor.location |> canReach validTarget 
         let! door = level |> doorExists validTarget 
         let! _ = door |> test
         return level
@@ -86,8 +86,8 @@ let private testDoor test direction actorId level =
 let isValidMove direction actorId level =
     result {
         let! (actor, validTarget) = level |> isValidDirection direction actorId 
+        let! _ = actor.location |> isValidMoveDistance validTarget 
         let! _ = level |> isEmptyTile validTarget 
-        let! validMove = actor.location |> isValidMoveDistance validTarget 
         return level
     }
 
@@ -98,7 +98,7 @@ let canCloseDoor = testDoor canDoorBeClosed
 let canTakeItems direction actorId level =
     result {
         let! (actor, validTarget) = level |> isValidDirection direction actorId 
-        let! _ = actor.location |> canReachDoor validTarget 
+        let! _ = actor.location |> canReach validTarget 
         let! _ = level |> itemsAtLocation validTarget 
         return level
     }

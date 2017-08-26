@@ -26,16 +26,19 @@ module Optics =
                 | true -> None
                 | false -> Some list)
 
-        let expectWhere_ (predicate: ('a -> bool)) : Lens<list<'a>, 'a> =
-            List.find predicate,
-            (fun item list -> 
-                let cleanList = List.filter (not predicate) list
-                item :: cleanList)
+        let private without (predicate: ('a -> bool)) list =
+            list |> List.filter (not predicate) 
 
         let where_ (predicate: ('a -> bool)) : Lens<list<'a>, 'a option> =
             List.tryFind predicate,
             (fun itemOption list -> 
-                let cleanList = List.filter (not predicate) list
+                let cleanList = list |> without predicate
                 match itemOption with
                 | Some item -> item :: cleanList
-                | None -> list)
+                | None -> cleanList)
+
+        let expectWhere_ (predicate: ('a -> bool)) : Lens<list<'a>, 'a> =
+            List.find predicate,
+            (fun item list -> 
+                let cleanList = list |> without predicate
+                item :: cleanList)
