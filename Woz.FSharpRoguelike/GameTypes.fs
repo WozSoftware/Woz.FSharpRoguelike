@@ -8,19 +8,24 @@ open AetherExtensions.Optics.Map
 open AetherExtensions.Optics.List
 open Vector
 
-type id = int
+// -----------------------------------------
+
+[<Measure>] type id
+[<Measure>] type defence
+[<Measure>] type damage
+[<Measure>] type potionStrength
 
 // -----------------------------------------
 
 type tile = Void | Floor | Wall | Water 
 
-type map = {tiles: tile[][]} 
+type map = tile[][]
 
 module Map = 
     let bottomLeft = vector.create 0 0
-    let width map = map.tiles.[0].Length - 1
-    let height map = map.tiles.Length - 1
-    let topRight map = vector.create (width map) (height map)
+    let width (map: map) = map.[0].Length - 1
+    let height (map: map) = map.Length - 1
+    let topRight tiles = vector.create (width tiles) (height tiles)
 
 // -----------------------------------------
 
@@ -31,10 +36,30 @@ type door =
 
 // -----------------------------------------
 
-type item = {id: id; name: string }
+type slot = | Helmet | Torso | Legs | Gloves | Boots
+
+type item =
+    | Key of int<id> * string
+    | Armor of int<id> * string * slot option * int<defence>
+    | Weapon of int<id> * string * bool * int<damage>
+    | HealthPotion of int<id> * string * int<potionStrength>
 
 module Item =
-    let hasId id item = item.id = id
+    let idOf item = 
+        match item with
+        | Key (id, _) -> id
+        | Armor (id, _, _, _) -> id
+        | Weapon (id, _, _, _) -> id
+        | HealthPotion (id, _, _) -> id
+
+    let nameOf item = 
+        match item with
+        | Key (_, name) -> name
+        | Armor (_, name, _, _) -> name
+        | Weapon (_, name, _, _) -> name
+        | HealthPotion (_, name, _) -> name
+
+    let hasId id item = (idOf item) = id
 
 // -----------------------------------------
 
@@ -60,7 +85,7 @@ module Stat =
 
 type actor = 
     {
-        id: int
+        id: int<id>
         isNpc: bool
         name: string
         stats: Map<stats, stat>
@@ -102,14 +127,14 @@ module Actor =
 
 type level = 
     {
-        playerId: id
+        playerId: int<id>
 
         map: map; 
         doors: Map<vector, door>; 
-        actors: Map<id, actor>
+        actors: Map<int<id>, actor>
         items: Map<vector, List<item>>
 
-        mapActors: Map<vector, id>
+        mapActors: Map<vector, int<id>>
     }
 
 module Level =

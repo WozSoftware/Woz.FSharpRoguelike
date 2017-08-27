@@ -22,7 +22,7 @@ let private testLevelTemplate =
 
 let private testPlayer =
     {
-        id = 1;
+        id = 1<id>;
         isNpc = false;
         name = "player";
         stats = [(Health, {current = 10; max = 10})] |> Map.ofSeq
@@ -37,8 +37,8 @@ let private charToTile character =
     | '~' -> Water
     | _ -> Void
 
-let testItem1 = {id = 2; name = "Item"}
-let testItem2 = {id = 3; name = "Item"}
+let testItem1 = Key (2<id>, "Basic key")
+let testItem2 = HealthPotion (3<id>, "Minor potion", 5<potionStrength>)
 
 let private testMap =
     let rowToTiles row = row |> Seq.map charToTile |> Array.ofSeq
@@ -48,11 +48,11 @@ let testLevel =
     let level = 
         {
             playerId = testPlayer.id;
-            map = {tiles = testMap}
+            map = testMap
             doors = Map.empty<vector, door>
-            actors = Map.empty<id, actor>
+            actors = Map.empty<int<id>, actor>
             items = Map.empty<vector, List<item>>
-            mapActors = Map.empty<vector, id>
+            mapActors = Map.empty<vector, int<id>>
         }
 
     level 

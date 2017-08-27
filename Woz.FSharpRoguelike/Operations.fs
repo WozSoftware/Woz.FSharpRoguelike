@@ -4,6 +4,7 @@ open Aether
 open Aether.Operators
 open GameTypes
 open GameTypes.Actor
+open GameTypes.Item
 open GameTypes.Level
 open Queries.Level
 
@@ -49,9 +50,9 @@ let hurtActor damage actorId level =
     let updatedHealth = decreaseCurrent damage (level |> Optic.get actorHealth_)
     level |> Optic.set actorHealth_ updatedHealth
 
-let addItemToBackpack (item: item) actorId level =
+let addItemToBackpack item actorId level =
     let actor = level |> expectActor actorId 
-    let newActor = actor |> Optic.set (expectBackpackItemWithId_ item.id) item
+    let newActor = actor |> Optic.set (expectBackpackItemWithId_ (idOf item)) item
     level |> Optic.set (expectActorWithId_ actorId) newActor
 
 // Door
@@ -71,8 +72,8 @@ let closeDoor direction actorId level =
 
 // Items
 
-let placeItem (item: item) location =
-    Optic.set (itemWithId_ location item.id) (Some item)
+let placeItem item location =
+    Optic.set (itemWithId_ location (idOf item)) (Some item)
 
 let takeItems direction actorId level =
     let actor, targetLocation = level |> actorTarget direction actorId

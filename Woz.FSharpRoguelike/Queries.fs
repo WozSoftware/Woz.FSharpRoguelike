@@ -14,7 +14,7 @@ module Level =
         location <= topRight level.map
 
     let getTile location level = 
-        level.map.tiles.[location.y].[location.x]
+        level.map.[location.y].[location.x]
     
     let isPlayerId level = (=) level.playerId
     let isNpcId level = (<>) level.playerId
