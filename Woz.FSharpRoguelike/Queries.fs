@@ -76,9 +76,8 @@ module Level =
 
     let itemsAt location = Optic.get (itemsAt_ location)
 
-    let itemsMapAt location = 
-        Optic.get (itemsAt_ location)
-        >> List.map (fun item -> ((idOf item), item))
+    let toItemMap = 
+        List.map (fun item -> ((idOf item), item))
         >> Map.ofList
 
     let hasItems location = 

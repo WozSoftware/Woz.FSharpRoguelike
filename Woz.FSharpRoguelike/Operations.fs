@@ -81,7 +81,7 @@ let private mergeItemMaps items1 items2 =
 
 let takeItems direction actorId level =
     let actor, targetLocation = level |> actorTarget direction actorId
-    let locationItems = level |> itemsMapAt targetLocation
+    let locationItems = level |> itemsAt targetLocation |> toItemMap
     let newBackpack = actor |> Optic.get backpack_ |> mergeItemMaps locationItems
     let newActor = actor |> Optic.set backpack_ newBackpack
     level 
