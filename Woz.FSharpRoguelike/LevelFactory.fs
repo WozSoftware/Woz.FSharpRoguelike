@@ -28,7 +28,7 @@ let private testPlayer =
         stats = [(Health, {current = 10; max = 10})] |> Map.ofSeq
         location = vector.create 9 6
         backpack = Map.empty<int, item>
-        equiped = Map.empty<slot, int>
+        equiped = Map.empty<slot, item>
         weapon = None
     }
 

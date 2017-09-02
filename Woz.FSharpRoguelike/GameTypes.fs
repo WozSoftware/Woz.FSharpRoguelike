@@ -89,8 +89,8 @@ type actor =
         stats: Map<stats, stat>
         location: vector
         backpack: Map<int, item>
-        equiped: Map<slot, int>
-        weapon: int option
+        equiped: Map<slot, item>
+        weapon: item option
     }
 
 module Actor =
