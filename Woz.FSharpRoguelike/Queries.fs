@@ -4,6 +4,7 @@ open Microsoft.FSharp.Core.Option
 open Aether
 open GameTypes
 open GameTypes.Actor
+open GameTypes.Item
 open GameTypes.Level
 open GameTypes.Map
 open Vector
@@ -73,10 +74,15 @@ module Level =
 
     let locationBlocksMove = checkLocationFor blockMove
 
-    let getItems location = Optic.get (itemsAt_ location)
+    let itemsAt location = Optic.get (itemsAt_ location)
+
+    let itemsMapAt location = 
+        Optic.get (itemsAt_ location)
+        >> List.map (fun item -> ((idOf item), item))
+        >> Map.ofList
 
     let hasItems location = 
-        getItems location >> Seq.isEmpty >> not
+        itemsAt location >> Seq.isEmpty >> not
 
     let findItem location id = 
         Optic.get (itemWithId_ location id)

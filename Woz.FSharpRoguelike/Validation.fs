@@ -58,7 +58,7 @@ let private isValidMoveDistance target location =
         Invalid "You can't move that far" 
 
 let private itemsAtLocation location level =
-    let items = level |> getItems location
+    let items = level |> itemsAt location
     if items |> Seq.isEmpty then
         Invalid "No items to take" 
     else

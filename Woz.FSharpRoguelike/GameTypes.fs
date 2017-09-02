@@ -10,13 +10,6 @@ open Vector
 
 // -----------------------------------------
 
-[<Measure>] type id
-[<Measure>] type defence
-[<Measure>] type damage
-[<Measure>] type potionStrength
-
-// -----------------------------------------
-
 type tile = Void | Floor | Wall | Water 
 
 type map = tile[][]
@@ -33,33 +26,6 @@ type door =
     | Open
     | Closed
     | Locked of string // Key name
-
-// -----------------------------------------
-
-type slot = | Helmet | Torso | Legs | Gloves | Boots
-
-type item =
-    | Key of int<id> * string
-    | Armor of int<id> * string * slot option * int<defence>
-    | Weapon of int<id> * string * bool * int<damage>
-    | HealthPotion of int<id> * string * int<potionStrength>
-
-module Item =
-    let idOf item = 
-        match item with
-        | Key (id, _) -> id
-        | Armor (id, _, _, _) -> id
-        | Weapon (id, _, _, _) -> id
-        | HealthPotion (id, _, _) -> id
-
-    let nameOf item = 
-        match item with
-        | Key (_, name) -> name
-        | Armor (_, name, _, _) -> name
-        | Weapon (_, name, _, _) -> name
-        | HealthPotion (_, name, _) -> name
-
-    let hasId id item = (idOf item) = id
 
 // -----------------------------------------
 
@@ -83,20 +49,54 @@ module Stat =
 
 // -----------------------------------------
 
+type slot = | Helmet | Torso | Legs | Gloves | Boots
+
+type key = {id: int; name: string}
+type armor = {id: int; name: string; slot: slot; defence: int; absorbs: int}
+type weapon = {id: int; name: string; attack: int; damage: int}
+type potion = {id: int; name: string; stat: stats; effect: int}
+
+type item =
+    | Key of key
+    | Armor of armor
+    | Weapon of weapon
+    | Potion of potion
+
+module Item =
+    let idOf item = 
+        match item with
+        | Key k -> k.id
+        | Armor a -> a.id
+        | Weapon w -> w.id
+        | Potion p -> p.id
+
+    let nameOf item = 
+        match item with
+        | Key k -> k.name
+        | Armor a -> a.name
+        | Weapon w -> w.name
+        | Potion p -> p.name
+
+    let hasId id item = (idOf item) = id
+
+// -----------------------------------------
+
 type actor = 
     {
-        id: int<id>
+        id: int
         isNpc: bool
         name: string
         stats: Map<stats, stat>
         location: vector
-        backpack: List<item>
+        backpack: Map<int, item>
+        equiped: Map<slot, int>
+        weapon: int option
     }
 
 module Actor =
     let hasId id stat = stat.id = id
 
-    let private stats_ =
+    let stats_ =
         (fun actor -> actor.stats), 
         (fun stats actor -> {actor with stats = stats})    
 
@@ -118,23 +118,23 @@ module Actor =
         (fun backpack actor -> {actor with backpack = backpack})    
 
     let backpackItemWithId_ id = 
-        backpack_ >-> (where_ (Item.hasId id))
+        backpack_ >-> Map.value_ id
 
     let expectBackpackItemWithId_ id = 
-        backpack_ >-> expectWhere_ (Item.hasId id)
+        backpack_ >-> expectValue_ id
 
 // -----------------------------------------
 
 type level = 
     {
-        playerId: int<id>
+        playerId: int
 
         map: map; 
         doors: Map<vector, door>; 
-        actors: Map<int<id>, actor>
+        actors: Map<int, actor>
         items: Map<vector, List<item>>
 
-        mapActors: Map<vector, int<id>>
+        mapActors: Map<vector, int>
     }
 
 module Level =

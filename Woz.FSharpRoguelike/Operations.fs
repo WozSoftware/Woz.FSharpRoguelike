@@ -75,10 +75,14 @@ let closeDoor direction actorId level =
 let placeItem item location =
     Optic.set (itemWithId_ location (idOf item)) (Some item)
 
+let private mergeItemMaps items1 items2 =
+    let folder items id item = Map.add id item items
+    Map.fold folder items1 items2
+
 let takeItems direction actorId level =
     let actor, targetLocation = level |> actorTarget direction actorId
-    let locationItems = level |> Optic.get (itemsAt_ targetLocation)
-    let newBackpack = List.concat [locationItems; actor |> Optic.get backpack_]
+    let locationItems = level |> itemsMapAt targetLocation
+    let newBackpack = actor |> Optic.get backpack_ |> mergeItemMaps locationItems
     let newActor = actor |> Optic.set backpack_ newBackpack
     level 
         |> Optic.set (expectActorWithId_ actorId) newActor
