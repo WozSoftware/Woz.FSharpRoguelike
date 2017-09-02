@@ -14,3 +14,5 @@ The story so far...
 * [Game Loop Time](https://steemit.com/programming/@woz.software/building-a-roguelike-in-f-from-scratch-game-loop-time)
 * [It's ALIVE](https://steemit.com/programming/@woz.software/building-a-roguelike-in-f-from-scratch-it-s-alive)
 * [Working Doors](https://steemit.com/programming/@woz.software/building-a-roguelike-in-f-from-scratch-working-doors)
+* [Multi Key Commands](https://steemit.com/programming/@woz.software/building-a-roguelike-in-f-from-scratch-multi-key-commands)
+* [Take Items](https://steemit.com/programming/@woz.software/building-a-roguelike-in-f-from-scratch-take-items)
