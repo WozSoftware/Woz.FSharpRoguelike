@@ -52,7 +52,7 @@ module Stat =
 type slot = | Helmet | Torso | Legs | Gloves | Boots
 
 type key = {id: int; name: string}
-type armor = {id: int; name: string; slot: slot; defence: int; absorbs: int}
+type armor = {id: int; name: string; slot: slot; defense: int; absorbs: int}
 type weapon = {id: int; name: string; attack: int; damage: int}
 type potion = {id: int; name: string; stat: stats; effect: int}
 
@@ -89,7 +89,7 @@ type actor =
         stats: Map<stats, stat>
         location: vector
         backpack: Map<int, item>
-        equiped: Map<slot, item>
+        equipped: Map<slot, item>
         weapon: item option
     }
 
