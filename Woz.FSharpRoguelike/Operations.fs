@@ -88,6 +88,10 @@ let takeItems direction actorId level =
         |> Optic.set (expectActorWithId_ actorId) newActor
         |> Optic.set (itemsAt_ targetLocation) []
 
+// Messages
 
+let log message level =
+    let messages = message :: (level |> Optic.get messages_)
+    level |> Optic.set messages_ messages
 
-    
+let flush = Optic.set messages_ []

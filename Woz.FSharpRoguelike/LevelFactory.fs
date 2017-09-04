@@ -39,11 +39,13 @@ let private charToTile character =
     | '~' -> Water
     | _ -> Void
 
+let private basicKey = "Basic key"
+
 let private testItem1 = 
     Key 
         {
             id = 2
-            name = "Basic key"
+            name = basicKey
         }
 
 let private testItem2 = 
@@ -68,11 +70,13 @@ let testLevel =
             actors = Map.empty<int, actor>
             items = Map.empty<vector, List<item>>
             mapActors = Map.empty<vector, int>
+            messages = []
         }
 
     level 
         |> spawnActor testPlayer 
         |> placeDoor Open (vector.create 19 6)
         |> placeDoor Closed (vector.create 29 6)
+        |> placeDoor (Locked basicKey) (vector.create 24 6)
         |> placeItem testItem1 (vector.create 17 5)
         |> placeItem testItem2 (vector.create 16 7)

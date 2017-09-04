@@ -2,6 +2,7 @@
 
 open System
 open Monads.Result
+open GameTypes
 open Commands
 open Vector.Directions
 open Validation
@@ -14,7 +15,6 @@ let private selectActorCommand direction actorId level =
     resultOrElse {
         return! selectCommand isValidMove buildMoveActorCommand direction actorId level
         return! selectCommand canOpenDoor buildOpenDoorCommand direction actorId level
-        return! invalidCommand level
     }
 
 let rec handleKeyPress activeBuilder actorId =
@@ -34,5 +34,8 @@ let rec handleKeyPress activeBuilder actorId =
     | ConsoleKey.Spacebar -> idleCommand
     | _ -> invalidCommand
 
-let getPlayerCommand = handleKeyPress None 
+let getCommandForActor = handleKeyPress None 
+
+let getPlayerCommand level = 
+    level.playerId |> getCommandForActor
 

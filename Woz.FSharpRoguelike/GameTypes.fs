@@ -135,6 +135,8 @@ type level =
         items: Map<vector, List<item>>
 
         mapActors: Map<vector, int>
+
+        messages: List<string>
     }
 
 module Level =
@@ -146,7 +148,7 @@ module Level =
     
     // Doors
 
-    let private doors_ =
+    let doors_ =
         (fun level -> level.doors), 
         (fun doors level -> {level with doors = doors})    
 
@@ -168,7 +170,7 @@ module Level =
     let expectActorWithId_ actorId = 
         actors_ >-> expectValue_ actorId 
 
-    let private mapActors_ =
+    let mapActors_ =
         (fun level -> level.mapActors), 
         (fun mapActors level -> {level with mapActors = mapActors})    
 
@@ -180,7 +182,7 @@ module Level =
 
     // Items
 
-    let private items_ = 
+    let items_ = 
         (fun level -> level.items), 
         (fun items level -> {level with items = items})    
 
@@ -192,5 +194,12 @@ module Level =
 
     let expectItemWithId_ location id = 
         itemsAt_ location >-> expectWhere_ (Item.hasId id)
+
+    // Messages
+
+    let messages_ = 
+        (fun level -> level.messages), 
+        (fun messages level -> {level with messages = messages})    
+
 
    

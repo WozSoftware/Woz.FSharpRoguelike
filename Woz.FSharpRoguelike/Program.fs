@@ -1,9 +1,10 @@
 ﻿module Program
 
-open LevelFactory
 open GameLoop
+open RenderEngine
+open LevelFactory
 
 [<EntryPoint>]
 let main argv = 
-    gameLoop testLevel
+    render testLevel |> gameLoop
     0 // return an integer exit code

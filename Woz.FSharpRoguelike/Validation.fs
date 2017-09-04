@@ -30,7 +30,7 @@ let private canDoorBeOpened door =
 let private canDoorBeClosed door =
     match door with
     | Open -> Valid door
-    | Closed -> Invalid "Thet door is already closed" 
+    | Closed -> Invalid "That door is already closed" 
     | Locked _ -> Invalid "That door is locked closed" 
 
 let private isValidLocation location level =
@@ -41,7 +41,7 @@ let private isValidLocation location level =
 
 let private isEmptyTile location level =
     if level |> locationBlocksMove location then
-        Invalid "You can't move to that location" 
+        Invalid "You can't move there" 
     else
         Valid (getTile location level)
 

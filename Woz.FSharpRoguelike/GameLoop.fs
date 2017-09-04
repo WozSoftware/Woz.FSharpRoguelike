@@ -5,6 +5,7 @@ open PlayerInput
 open Commands
 open Queries.Level
 open Monads
+open Operations
 open Monads.Result
 open RenderEngine
 
@@ -33,18 +34,15 @@ let private runTurn playerCommand level =
 
     match turnResult with
     | Valid turnLevel -> turnLevel
-    | Invalid _ -> level
+    | Invalid message -> level |> log message
 
 let rec gameLoop level =
-    render level
-
-    let playerCommand = getPlayerCommand level.playerId
-    let turnLevel = level |> runTurn playerCommand
-    let player = level |> expectActor turnLevel.playerId
-    if not (isAlive player) then
+    let playerCommand = level |> getPlayerCommand 
+    let turnLevel = level |> runTurn playerCommand |> render |> flush 
+    if turnLevel |> isPlayerDead then
         ()
     else
-        gameLoop turnLevel
+        turnLevel |> gameLoop
 
 
 

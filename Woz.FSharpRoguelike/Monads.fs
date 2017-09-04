@@ -66,5 +66,7 @@ module Result =
 //
 //    type stateFactory() =
 //        member this.Bind(monad, func) = monad >>= func
-//        member this.Return(value) = Valid value
+//        member this.Return(value) = State (fun state -> value, state)
+//
+//    let state = new stateFactory()
 

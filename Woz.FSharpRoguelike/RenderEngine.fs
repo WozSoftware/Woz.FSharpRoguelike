@@ -62,8 +62,13 @@ let render level =
             |> Seq.toArray
             |> System.String
     
+    let print strings = 
+        strings |> Seq.iter (printfn "%s")
+        printfn ""
+
     Console.Clear()
-    ys level.map 
-        |> Seq.map (buildRow level.map) 
-        |> Seq.iter (printfn "%s")
-        
+
+    ys level.map |> Seq.map (buildRow level.map) |> print
+    level.messages |> List.rev |> print
+
+    level
