@@ -68,7 +68,8 @@ let closeDoor direction actorId level =
     let _, targetLocation = level |> actorTarget direction actorId
     level |> placeDoor Closed targetLocation 
 
-//let unlockDoor = placeDoor (Some Closed)
+// A little more explicit but not needed
+let unlockDoor = closeDoor
 
 // Items
 

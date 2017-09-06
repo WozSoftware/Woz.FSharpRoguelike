@@ -1,21 +1,22 @@
 ﻿module PlayerInput
 
 open System
-open Monads.Result
+open Monads
 open GameTypes
 open Commands
 open Vector.Directions
 open Validation
 
-let private selectCommand validator operation direction actorId =
-    validator direction actorId 
-    >> bind (fun l -> operation direction actorId l)
-
 let private selectActorCommand direction actorId level =
-    resultOrElse {
-        return! selectCommand isValidMove buildMoveActorCommand direction actorId level
-        return! selectCommand canOpenDoor buildOpenDoorCommand direction actorId level
-    }
+    match level |> isLockedDoor direction actorId with
+    | Valid l -> l |> buildUnlockDoorCommand direction actorId
+    | Invalid _ ->
+        match level |> buildOpenDoorCommand direction actorId with
+        | Valid l -> Valid l
+        | Invalid _ ->
+            match level |> buildMoveActorCommand direction actorId with
+            | Valid l -> Valid l
+            | Invalid error -> Invalid error
 
 let rec handleKeyPress activeBuilder actorId =
     let workingBuilder = 

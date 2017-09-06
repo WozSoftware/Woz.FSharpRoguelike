@@ -79,6 +79,11 @@ module Item =
 
     let hasId id item = (idOf item) = id
 
+    let isKey item = 
+        match item with
+        | Key _ -> true
+        | _ -> false
+
 // -----------------------------------------
 
 type actor = 

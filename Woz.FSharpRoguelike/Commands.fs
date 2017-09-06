@@ -27,5 +27,7 @@ let buildOpenDoorCommand = buildCommand canOpenDoor openDoor
 
 let buildCloseDoorCommand = buildCommand canCloseDoor closeDoor 
 
+let buildUnlockDoorCommand = buildCommand canUnlockDoor unlockDoor 
+
 let buildTakeItemsCommand = buildCommand canTakeItems takeItems
     

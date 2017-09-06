@@ -29,6 +29,14 @@ module Level =
     
     let hasActor location level =
         level |> Optic.get (mapActorAt_ location) |> isSome
+    
+    let hasKey keyName actor =
+        actor 
+            |> Optic.get backpack_
+            |> Map.toSeq
+            |> Seq.map snd
+            |> Seq.filter isKey
+            |> Seq.exists (fun i -> i |> nameOf = keyName)
 
     let findActor actorId =
         Optic.get (actorWithId_ actorId)
