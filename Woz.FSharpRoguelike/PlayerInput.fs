@@ -13,10 +13,7 @@ let private selectActorCommand direction actorId level =
     | Invalid _ ->
         match level |> buildOpenDoorCommand direction actorId with
         | Valid l -> Valid l
-        | Invalid _ ->
-            match level |> buildMoveActorCommand direction actorId with
-            | Valid l -> Valid l
-            | Invalid error -> Invalid error
+        | Invalid _ -> level |> buildMoveActorCommand direction actorId 
 
 let rec handleKeyPress activeBuilder actorId =
     let workingBuilder = 
