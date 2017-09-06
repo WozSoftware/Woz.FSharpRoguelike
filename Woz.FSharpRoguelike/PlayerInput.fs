@@ -24,6 +24,7 @@ let rec handleKeyPress activeBuilder actorId =
     match Console.ReadKey().Key with
     | ConsoleKey.O -> handleKeyPress (Some buildOpenDoorCommand) actorId
     | ConsoleKey.C -> handleKeyPress (Some buildCloseDoorCommand) actorId
+    | ConsoleKey.U -> handleKeyPress (Some buildUnlockDoorCommand) actorId
     | ConsoleKey.T -> handleKeyPress (Some buildTakeItemsCommand) actorId
     | ConsoleKey.W -> workingBuilder north actorId
     | ConsoleKey.A -> workingBuilder west actorId
