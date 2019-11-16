@@ -16,8 +16,7 @@ module Optics =
 
     module List =
         let notEmpty_ : Isomorphism<List<'a> option, List<'a>> =
-            (fun listOption -> 
-                match listOption with
+            (function 
                 | Some list -> list
                 | None -> []), 
             (fun list -> 
